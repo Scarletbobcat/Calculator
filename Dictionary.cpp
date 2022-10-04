@@ -38,30 +38,47 @@ void Dictionary::add(const std::string &key,const Fraction value) {
     // not found... is table too full? If so, exception
     if (nItems == MAX_ITEMS)
         throw std::overflow_error("Dictionary is full");
-
-    // not too full... search again stopping at first open spot
-
-    // put key here, increment nItems and done
+    else {
+        // not too full... search again stopping at first open spot
+        while (status[pos] != UNUSED) {
+            pos = (pos + 1) & TABLE_SIZE;
+        // put key here, increment nItems and done
+        }
+        keys[pos] = key;
+        values[pos] = value;
+        nItems++;
+    }
 }
 
 Fraction Dictionary::search(const std::string &key) {
     // hash key to get a position
-
+    uint32_t
+        pos = hash(key) % TABLE_SIZE;
     // sequential search for key; stop at unused
-
-    // if key found, return value
-
+    while (status[pos] != UNUSED) {
+        // if key found, return value
+        if (keys[pos] == key) {
+            return values[pos];
+        }
+        pos = (pos + 1) % TABLE_SIZE;
+    }
     // if we get here, key isn't here, throw exception
     throw std::domain_error("Key not found");
 }
 
-void Dictionary::remove(const std::string &) {
+void Dictionary::remove(const std::string &key) {
     // hash key to get a position
-
+    uint32_t
+        pos = hash(key) % TABLE_SIZE;
     // sequential search for key; stop at unused
-
-    // if key found, set status to deleted and return
-
+    while (status[pos] != UNUSED) {
+        // if key found, set status to deleted and return
+        if (keys[pos] == key) {
+            status[pos] = DELETED;
+            return;
+        }
+        pos = (pos + 1) % TABLE_SIZE;
+    }
     // if we get here, key isn't here, throw exception
     throw std::domain_error("Key not found");
 
