@@ -42,10 +42,11 @@ void Dictionary::add(const std::string &key,const Fraction value) {
         // not too full... search again stopping at first open spot
         while (status[pos] != UNUSED) {
             pos = (pos + 1) & TABLE_SIZE;
-        // put key here, increment nItems and done
+            // put key here, increment nItems and done
         }
         keys[pos] = key;
         values[pos] = value;
+        status[pos] = IN_USE;
         nItems++;
     }
 }
@@ -53,11 +54,11 @@ void Dictionary::add(const std::string &key,const Fraction value) {
 Fraction Dictionary::search(const std::string &key) {
     // hash key to get a position
     uint32_t
-        pos = hash(key) % TABLE_SIZE;
+            pos = hash(key) % TABLE_SIZE;
     // sequential search for key; stop at unused
     while (status[pos] != UNUSED) {
         // if key found, return value
-        if (keys[pos] == key) {
+        if (status[pos] == IN_USE && keys[pos] == key) {
             return values[pos];
         }
         pos = (pos + 1) % TABLE_SIZE;
@@ -69,11 +70,11 @@ Fraction Dictionary::search(const std::string &key) {
 void Dictionary::remove(const std::string &key) {
     // hash key to get a position
     uint32_t
-        pos = hash(key) % TABLE_SIZE;
+            pos = hash(key) % TABLE_SIZE;
     // sequential search for key; stop at unused
     while (status[pos] != UNUSED) {
         // if key found, set status to deleted and return
-        if (keys[pos] == key) {
+        if (status[pos] == IN_USE && keys[pos] == key) {
             status[pos] = DELETED;
             return;
         }

@@ -21,3 +21,11 @@ StackType Stack::peek() {
 
     return data[top-1];
 }
+
+StackType Stack::pop() {
+
+    if (top == 0)
+        throw std::underflow_error("Stack is empty");
+
+    return data[--top];
+}
