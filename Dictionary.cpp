@@ -42,8 +42,8 @@ void Dictionary::add(const std::string &key,const Fraction value) {
         // not too full... search again stopping at first open spot
         while (status[pos] != UNUSED) {
             pos = (pos + 1) & TABLE_SIZE;
-            // put key here, increment nItems and done
         }
+        // put key here, increment nItems and done
         keys[pos] = key;
         values[pos] = value;
         status[pos] = IN_USE;
@@ -83,4 +83,17 @@ void Dictionary::remove(const std::string &key) {
     // if we get here, key isn't here, throw exception
     throw std::domain_error("Key not found");
 
+}
+
+bool Dictionary::contain(const std::string &key) {
+    uint32_t
+        pos = hash(key) % TABLE_SIZE;
+
+    while (status[pos] != UNUSED) {
+        if (status[pos] == IN_USE && keys[pos] == key) {
+            return true;
+        }
+        pos = (pos + 1) % TABLE_SIZE;
+    }
+    return false;
 }
