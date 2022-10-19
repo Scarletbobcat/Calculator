@@ -18,7 +18,6 @@ int main() {
     string input;
     do {
         cout << "\nPlease input an expression example: x - 5 * ( variable = 3 ) or \"quit\" to quit\n";
-        cout << "Please ensure that there is a space in between each operand and operation\n";
         getline(cin, input);
         if (input != "quit") {
             cout << "The expression evaluates to: ";
@@ -100,15 +99,15 @@ void evaluate (string s) {
         if (isdigit(s[first])) {
             x.name = "";
             x.value = 0;
-            while (s[first] != ' ' && !isOperator(s[first]) && first < s.length()) {
+            while (isdigit(s[first])) {
                 x.value = x.value * 10 + s[first] - '0';
                 first++;
             }
             numStack.push(x);
-        }else if (isalnum(s[first]) || s[first] == '_'){
+        }else if (isalpha(s[first]) || s[first] == '_'){
             x.name = "";
             x.value = 0;
-            while (s[first] != ' ' && first < s.length()) {
+            while (isalnum(s[first]) || s[first] == '_') {
                 x.name.push_back(s[first]);
                 first++;
             }
